@@ -5,7 +5,7 @@ _commit=$(git -C "${_repo}" rev-parse --verify "${EASYEFFECTS_COMMIT:-HEAD}^{com
 pkgname=easyeffects-custom
 pkgver=$(git -C "${_repo}" describe --tags --long --match 'v[0-9]*' "${_commit}") || return 1
 pkgver=$(printf '%s' "${pkgver}" | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g')
-pkgrel=1
+pkgrel=2
 pkgdesc='Audio effects for PipeWire applications (local custom build)'
 arch=('x86_64')
 url='https://github.com/wwmm/easyeffects'
@@ -18,8 +18,9 @@ depends=(
   'webrtc-audio-processing' 'libmysofa'
 )
 makedepends=('cmake' 'extra-cmake-modules' 'git' 'ninja' 'intltool' 'appstream' 'ladspa')
+checkdepends=('python' 'lilv-tools' 'calf')
 optdepends=(
-  'calf: limiter, exciter, bass enhancer and others'
+  'calf: Tape Echo, exciter, bass enhancer and others'
   'lsp-plugins-lv2: equalizer, compressor, delay, loudness'
   'mda.lv2: bass loudness plugin'
   'x42-plugins-lv2: autotune plugin'
@@ -29,13 +30,23 @@ optdepends=(
 provides=("easyeffects=${pkgver}")
 conflicts=('easyeffects' 'easyeffects-git')
 
-source=("easyeffects::git+file://${_repo}#commit=${_commit}")
+# Separate caches per revision; verify the extracted checkout even with reused caches.
+_source_dir="easyeffects-${_commit}"
+source=("${_source_dir}::git+file://${_repo}#commit=${_commit}")
 sha256sums=('SKIP')
 
 build() {
-  cmake -S "${srcdir}/easyeffects" -B "${srcdir}/build" -G Ninja \
+  [[ $(git -C "${srcdir}/${_source_dir}" rev-parse HEAD) == "${_commit}" ]] || return 1
+  cmake -S "${srcdir}/${_source_dir}" -B "${srcdir}/build" -G Ninja \
     -W no-dev -D CMAKE_BUILD_TYPE=None -D CMAKE_INSTALL_PREFIX=/usr
   cmake --build "${srcdir}/build"
+}
+
+check() {
+  cd "${srcdir}/${_source_dir}"
+  lv2ls | grep -Fx 'http://calf.sourceforge.net/plugins/VintageDelay' >/dev/null || return 1
+  python -m unittest discover -s tests -p 'test_tape_echo_integration.py' -v
+  python -m unittest discover -s tests -p 'test_calf_vintage_delay.py' -v
 }
 
 package() {

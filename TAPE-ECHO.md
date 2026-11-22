@@ -1,6 +1,6 @@
 # Custom Tape Echo
 
-This branch adds a Tape Echo effect backed by the Calf Vintage Delay LV2 plugin (`http://calf.sourceforge.net/plugins/VintageDelay`), not a new tape simulation. On Arch, the `calf` package supplies the plugin; it is an optional package dependency, but is required for this effect. Check availability with `lv2ls | grep -Fx 'http://calf.sourceforge.net/plugins/VintageDelay'` (requires the LV2 command-line utilities).
+This branch adds a Tape Echo effect backed by the Calf Vintage Delay LV2 plugin (`http://calf.sourceforge.net/plugins/VintageDelay`), not a new tape simulation. On Arch, the `calf` package supplies the plugin; it is optional for Easy Effects overall but required for this effect. Check availability with `lv2ls | grep -Fx 'http://calf.sourceforge.net/plugins/VintageDelay'` (provided by `lilv-tools`).
 
 ## Controls
 
@@ -20,7 +20,7 @@ Dry and Wet are separate levels, not a single crossfade. The backend selects mil
 
 ## Build and install on Arch
 
-The local recipe builds a **committed Git revision**, not uncommitted edits. Install `base-devel` and the dependencies listed in `packaging/PKGBUILD` through your usual authorized process first. From this checkout, as an ordinary user:
+The local recipe builds a **committed Git revision**, not uncommitted edits. Install `base-devel` and the build, runtime and check dependencies listed in `packaging/PKGBUILD` through your usual authorized process first. Default package checks require `calf`, `lilv-tools` and `python`; `calf` must also remain installed to use Tape Echo. From this checkout, as an ordinary user:
 
 ```sh
 cd /home/jere/Development/easyeffects-custom
