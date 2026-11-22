@@ -23,6 +23,10 @@
 #include <qtmetamacros.h>
 #include <QString>
 #include <span>
+#include <array>
+#include <atomic>
+#include <cstdint>
+#include <memory>
 #include <string>
 #include "easyeffects_db_tape_echo.h"
 #include "pipeline_type.hpp"
@@ -65,5 +69,18 @@ class TapeEcho : public PluginBase {
  private:
   DbTapeEcho* settings = nullptr;
 
-  bool ready = false;
+  // The audio callback only tries the gate once; the worker never waits on it.
+  std::atomic_flag instance_gate = ATOMIC_FLAG_INIT;
+  std::atomic<uint64_t> requested_config{0};
+  std::atomic<uint32_t> reset_generation{0};
+  uint64_t applied_config = 0;
+  uint32_t applied_reset = 0;
+  bool instance_ready = false;
+  std::unique_ptr<lv2::Lv2Wrapper> echo_wrapper;
+  std::array<std::atomic<float>, 5> pending_controls{};
+  std::array<lv2::Port*, 5> control_ports{};
+  std::atomic<float> echo_input_gain{1.0F};
+  std::atomic<float> echo_output_gain{1.0F};
+
+  void service_instance();
 };

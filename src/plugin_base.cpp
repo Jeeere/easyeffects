@@ -718,5 +718,5 @@ float PluginBase::getOutputLevelRight() const {
 }
 
 bool PluginBase::hasNativeUi() {
-  return lv2_wrapper->has_ui();
+  return lv2_wrapper != nullptr && lv2_wrapper->has_ui();
 }
