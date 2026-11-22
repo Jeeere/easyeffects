@@ -44,7 +44,7 @@ class PluginBaseWorker : public QObject {
 class PluginBase : public QObject {
   Q_OBJECT
 
-  Q_PROPERTY(bool updateLevelMeters READ getUpdateLevelMeters WRITE setUpdateLevelMeters NOTIFY updateLevelMetersChanged)
+  Q_PROPERTY(bool updateLevelMeters MEMBER updateLevelMeters NOTIFY updateLevelMetersChanged)
   Q_PROPERTY(bool packageInstalled MEMBER packageInstalled NOTIFY packageInstalledChanged)
 
  public:
@@ -112,8 +112,8 @@ class PluginBase : public QObject {
    * report 0 db in the initial stage (when nothing is playing), so 0.0F is
    * more suitable for this purpose.
    */
-  std::atomic<float> input_peak_left = 0.0F, input_peak_right = 0.0F;
-  std::atomic<float> output_peak_left = 0.0F, output_peak_right = 0.0F;
+  float input_peak_left = 0.0F, input_peak_right = 0.0F;
+  float output_peak_left = 0.0F, output_peak_right = 0.0F;
 
   bool got_null_left_in = false;
   bool got_null_left_out = false;
@@ -121,14 +121,7 @@ class PluginBase : public QObject {
   bool got_null_right_out = false;
   bool got_null_probe = false;
 
-  std::atomic<bool> updateLevelMeters = false;
-
-  bool getUpdateLevelMeters() const { return updateLevelMeters.load(std::memory_order_relaxed); }
-  void setUpdateLevelMeters(bool value) {
-    if (updateLevelMeters.exchange(value, std::memory_order_relaxed) != value) {
-      Q_EMIT updateLevelMetersChanged();
-    }
-  }
+  bool updateLevelMeters = false;
 
   std::vector<float> dummy_left, dummy_right, copy_left_in, copy_right_in;
 
