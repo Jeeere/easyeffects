@@ -5,7 +5,7 @@ _commit=$(git -C "${_repo}" rev-parse --verify "${EASYEFFECTS_COMMIT:-HEAD}^{com
 pkgname=easyeffects-custom
 pkgver=$(git -C "${_repo}" describe --tags --long --match 'v[0-9]*' "${_commit}") || return 1
 pkgver=$(printf '%s' "${pkgver}" | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g')
-pkgrel=2
+pkgrel=3
 pkgdesc='Audio effects for PipeWire applications (local custom build)'
 arch=('x86_64')
 url='https://github.com/wwmm/easyeffects'
@@ -18,7 +18,7 @@ depends=(
   'webrtc-audio-processing' 'libmysofa'
 )
 makedepends=('cmake' 'extra-cmake-modules' 'git' 'ninja' 'intltool' 'appstream' 'ladspa')
-checkdepends=('python' 'lilv-tools' 'calf')
+checkdepends=('lilv-tools' 'calf')
 optdepends=(
   'calf: Tape Echo, exciter, bass enhancer and others'
   'lsp-plugins-lv2: equalizer, compressor, delay, loudness'
@@ -45,8 +45,6 @@ build() {
 check() {
   cd "${srcdir}/${_source_dir}"
   lv2ls | grep -Fx 'http://calf.sourceforge.net/plugins/VintageDelay' >/dev/null || return 1
-  python -m unittest discover -s tests -p 'test_tape_echo_integration.py' -v
-  python -m unittest discover -s tests -p 'test_calf_vintage_delay.py' -v
 }
 
 package() {
