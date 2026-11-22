@@ -54,6 +54,7 @@ Model::Model(QObject* parent)
           {BaseName::crossfeed, i18n("Crossfeed")},
           {BaseName::crosstalkCanceller, i18n("Crosstalk Canceller")},
           {BaseName::crusher, i18n("Crusher")},
+          {BaseName::tape_echo, i18n("Tape Echo")},
           {BaseName::crystalizer, i18n("Crystalizer")},
           {BaseName::deepfilternet, i18n("Deep Noise Remover")},
           {BaseName::deesser, i18n("Deesser")},

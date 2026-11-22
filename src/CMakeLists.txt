@@ -36,6 +36,7 @@ qt_add_qml_module(easyeffects
         crossfeed.hpp
         crosstalk_canceller.hpp
         crusher.hpp
+        tape_echo.hpp
         crystalizer.hpp
         db_manager.hpp
         deepfilternet.hpp
@@ -84,6 +85,7 @@ qt_add_qml_module(easyeffects
         contents/ui/Crossfeed.qml
         contents/ui/CrosstalkCanceller.qml
         contents/ui/Crusher.qml
+        contents/ui/TapeEcho.qml
         contents/ui/Crystalizer.qml
         contents/ui/CrystalizerBand.qml
         contents/ui/Deesser.qml
@@ -165,7 +167,9 @@ target_sources(easyeffects PRIVATE
     crosstalk_canceller.cpp
     crosstalk_canceller_preset.cpp
     crusher.cpp
+    tape_echo.cpp
     crusher_preset.cpp
+    tape_echo_preset.cpp
     crystalizer.cpp
     crystalizer_preset.cpp
     db_manager.cpp

@@ -48,6 +48,7 @@
 #include "crossfeed.hpp"
 #include "crosstalk_canceller.hpp"
 #include "crusher.hpp"
+#include "tape_echo.hpp"
 #include "crystalizer.hpp"
 #include "db_manager.hpp"
 #include "deepfilternet.hpp"
@@ -177,6 +178,8 @@ void EffectsBase::create_filters_if_necessary() {
 
     } else if (name.startsWith(tags::plugin_name::BaseName::crusher)) {
       filter = std::make_unique<Crusher>(log_tag, pm, pipeline_type, instance_id);
+    } else if (name.startsWith(tags::plugin_name::BaseName::tape_echo)) {
+      filter = std::make_unique<TapeEcho>(log_tag, pm, pipeline_type, instance_id);
 
     } else if (name.startsWith(tags::plugin_name::BaseName::crystalizer)) {
       filter = std::make_unique<Crystalizer>(log_tag, pm, pipeline_type, instance_id);
@@ -348,6 +351,8 @@ QVariant EffectsBase::getPluginInstance(const QString& pluginName) {
 
   } else if (pluginName.startsWith(tags::plugin_name::BaseName::crusher)) {
     return QVariant::fromValue(dynamic_cast<Crusher*>(p.get()));
+  } else if (pluginName.startsWith(tags::plugin_name::BaseName::tape_echo)) {
+    return QVariant::fromValue(dynamic_cast<TapeEcho*>(p.get()));
 
   } else if (pluginName.startsWith(tags::plugin_name::BaseName::crystalizer)) {
     return QVariant::fromValue(dynamic_cast<Crystalizer*>(p.get()));

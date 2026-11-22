@@ -39,6 +39,7 @@
 #include "easyeffects_db_crossfeed.h"
 #include "easyeffects_db_crosstalk_canceller.h"
 #include "easyeffects_db_crusher.h"
+#include "easyeffects_db_tape_echo.h"
 #include "easyeffects_db_crystalizer.h"
 #include "easyeffects_db_deepfilternet.h"
 #include "easyeffects_db_deesser.h"
@@ -259,6 +260,8 @@ void Manager::create_plugin_db(const QString& parentGroup,
 
     } else if (name.startsWith(tags::plugin_name::BaseName::crusher)) {
       ensureExists(makeKey(tags::plugin_name::BaseName::crusher, id), [&] { return new DbCrusher(parentGroup, id); });
+    } else if (name.startsWith(tags::plugin_name::BaseName::tape_echo)) {
+      ensureExists(makeKey(tags::plugin_name::BaseName::tape_echo, id), [&] { return new DbTapeEcho(parentGroup, id); });
 
     } else if (name.startsWith(tags::plugin_name::BaseName::crystalizer)) {
       ensureExists(makeKey(tags::plugin_name::BaseName::crystalizer, id),
