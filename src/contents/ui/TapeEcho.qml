@@ -26,7 +26,7 @@ Kirigami.ScrollablePage {
             Layout.fillWidth: true
             EeCard {
                 title: i18n("Tape Echo")
-                contentItem: ColumnLayout {
+                ColumnLayout {
                     FormCard.FormComboBoxDelegate {
                         text: i18n("Medium")
                         displayMode: FormCard.FormComboBoxDelegate.ComboBox
