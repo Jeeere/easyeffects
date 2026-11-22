@@ -5,6 +5,13 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 class TapeEchoThreadSafetyTest(unittest.TestCase):
+    def test_inherited_meters_use_atomic_cross_thread_state(self):
+        header = (ROOT / 'src/plugin_base.hpp').read_text()
+        self.assertIn('std::atomic<bool> updateLevelMeters', header)
+        self.assertIn('std::atomic<float> input_peak_left', header)
+        self.assertIn('std::atomic<float> output_peak_left', header)
+        self.assertIn('READ getUpdateLevelMeters WRITE setUpdateLevelMeters', header)
+
     def test_lifecycle_and_controls_are_handed_off_without_ui_access(self):
         cpp = (ROOT / 'src/tape_echo.cpp').read_text()
         header = (ROOT / 'src/tape_echo.hpp').read_text()
