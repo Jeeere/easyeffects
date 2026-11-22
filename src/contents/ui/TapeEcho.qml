@@ -14,13 +14,17 @@ Kirigami.ScrollablePage {
     property BackendTapeEcho pluginBackend
     Component.onCompleted: pluginBackend = pipelineInstance.getPluginInstance(name)
     function updateMeters() {
-        if (!pluginBackend) return;
+        if (!pluginBackend)
+            return;
         levels.setInputLevelLeft(pluginBackend.getInputLevelLeft());
         levels.setInputLevelRight(pluginBackend.getInputLevelRight());
         levels.setOutputLevelLeft(pluginBackend.getOutputLevelLeft());
         levels.setOutputLevelRight(pluginBackend.getOutputLevelRight());
     }
-    header: EeInputOutputGain { id: levels; pluginDB: page.pluginDB }
+    header: EeInputOutputGain {
+        id: levels
+        pluginDB: page.pluginDB
+    }
     ColumnLayout {
         Kirigami.CardsLayout {
             Layout.fillWidth: true
@@ -32,7 +36,9 @@ Kirigami.ScrollablePage {
                         displayMode: FormCard.FormComboBoxDelegate.ComboBox
                         currentIndex: page.pluginDB.medium
                         model: [i18n("Plain"), i18n("Tape"), i18n("Old Tape")]
-                        onActivated: idx => { page.pluginDB.medium = idx; }
+                        onActivated: idx => {
+                            page.pluginDB.medium = idx;
+                        }
                     }
                     EeSpinBox {
                         label: i18n("Delay Time")
@@ -42,7 +48,9 @@ Kirigami.ScrollablePage {
                         decimals: 0
                         stepSize: 1
                         unit: Units.ms
-                        onValueModified: v => { page.pluginDB.delayTime = v / 1; }
+                        onValueModified: v => {
+                            page.pluginDB.delayTime = v / 1;
+                        }
                     }
                     EeSpinBox {
                         label: i18n("Feedback")
@@ -52,7 +60,9 @@ Kirigami.ScrollablePage {
                         decimals: 0
                         stepSize: 1
                         unit: Units.percent
-                        onValueModified: v => { page.pluginDB.feedback = v / 100; }
+                        onValueModified: v => {
+                            page.pluginDB.feedback = v / 100;
+                        }
                     }
                     EeSpinBox {
                         label: i18n("Dry")
@@ -62,7 +72,9 @@ Kirigami.ScrollablePage {
                         decimals: 0
                         stepSize: 1
                         unit: Units.percent
-                        onValueModified: v => { page.pluginDB.dry = v / 100; }
+                        onValueModified: v => {
+                            page.pluginDB.dry = v / 100;
+                        }
                     }
                     EeSpinBox {
                         label: i18n("Wet")
@@ -72,17 +84,21 @@ Kirigami.ScrollablePage {
                         decimals: 0
                         stepSize: 1
                         unit: Units.percent
-                        onValueModified: v => { page.pluginDB.wet = v / 100; }
+                        onValueModified: v => {
+                            page.pluginDB.wet = v / 100;
+                        }
                     }
                 }
             }
         }
     }
     footer: Kirigami.ActionToolBar {
-        actions: [Kirigami.Action {
-            text: i18n("Reset")
-            icon.name: "edit-reset-symbolic"
-            onTriggered: page.pluginBackend.reset()
-        }]
+        actions: [
+            Kirigami.Action {
+                text: i18n("Reset")
+                icon.name: "edit-reset-symbolic"
+                onTriggered: page.pluginBackend.reset()
+            }
+        ]
     }
 }
