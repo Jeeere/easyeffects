@@ -1,0 +1,43 @@
+# Local feature-branch package; see README.md before building.
+# Resolve once, before makepkg clones. Only committed Git objects are used.
+_repo=$(git -C "${startdir}" rev-parse --show-toplevel) || return 1
+_commit=$(git -C "${_repo}" rev-parse --verify "${EASYEFFECTS_COMMIT:-HEAD}^{commit}") || return 1
+pkgname=easyeffects-custom
+pkgver=$(git -C "${_repo}" describe --tags --long --match 'v[0-9]*' "${_commit}") || return 1
+pkgver=$(printf '%s' "${pkgver}" | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g')
+pkgrel=1
+pkgdesc='Audio effects for PipeWire applications (local custom build)'
+arch=('x86_64')
+url='https://github.com/wwmm/easyeffects'
+license=('GPL-3.0-only')
+depends=(
+  'kcolorscheme' 'kirigami' 'kirigami-addons' 'kiconthemes' 'kconfigwidgets'
+  'qqc2-desktop-style' 'breeze-icons' 'qt6-base' 'qt6-graphs' 'pipewire-pulse'
+  'lilv' 'libsamplerate' 'libsndfile' 'zita-convolver' 'libebur128' 'rnnoise'
+  'soundtouch' 'libbs2b' 'nlohmann-json' 'tbb' 'speexdsp' 'gsl'
+  'webrtc-audio-processing' 'libmysofa'
+)
+makedepends=('cmake' 'extra-cmake-modules' 'git' 'ninja' 'intltool' 'appstream' 'ladspa')
+optdepends=(
+  'calf: limiter, exciter, bass enhancer and others'
+  'lsp-plugins-lv2: equalizer, compressor, delay, loudness'
+  'mda.lv2: bass loudness plugin'
+  'x42-plugins-lv2: autotune plugin'
+  'yelp: in-app help'
+  'zam-plugins-lv2: maximizer'
+)
+provides=("easyeffects=${pkgver}")
+conflicts=('easyeffects' 'easyeffects-git')
+
+source=("easyeffects::git+file://${_repo}#commit=${_commit}")
+sha256sums=('SKIP')
+
+build() {
+  cmake -S "${srcdir}/easyeffects" -B "${srcdir}/build" -G Ninja \
+    -W no-dev -D CMAKE_BUILD_TYPE=None -D CMAKE_INSTALL_PREFIX=/usr
+  cmake --build "${srcdir}/build"
+}
+
+package() {
+  DESTDIR="${pkgdir}" cmake --install "${srcdir}/build"
+}
